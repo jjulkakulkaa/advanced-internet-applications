@@ -6,19 +6,31 @@
     <title>JavaScript</title>
     <script src="main.js"></script>
     <style>
+        body {
+            color: rgb(222, 93, 183); 
+        }
+        button {
+            background-color: rgb(242, 180, 224);
+            color: rgb(231, 23, 172);
+            border: 1px solid rgb(216, 30, 160);
+
+        }
         table {
             border-collapse: collapse;
             width: 100%;
         }
 
         th, td {
-            border: 1px solid black;
+            border: 1px solid rgb(225, 79, 181);
             padding: 8px;
             text-align: left;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: rgb(244, 206, 233);
+        }
+        #example {
+            color: rgb(222, 93, 183);
         }
     </style>
 </head>
@@ -40,11 +52,11 @@
             <tr>
                 <th>Name</th>
                 <th>Color</th>
-                <th>Action</th> <!-- New column for action buttons -->
+                <th>Action</th> 
             </tr>
         </thead>
         <tbody id="bagListBody">
-            <!-- Empty body initially -->
+            
         </tbody>
     </table>
 </body>

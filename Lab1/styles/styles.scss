@@ -42,7 +42,9 @@ $headers: (
     display: flex;
     
 }
-
+* {
+    box-sizing: border-box;
+}
 
 .name-menu--links {
     margin-left: 20px;

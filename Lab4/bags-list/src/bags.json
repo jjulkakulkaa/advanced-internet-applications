@@ -1,0 +1,9 @@
+{
+    "name" : "GGL",
+    "bags" : [
+        {"name" : "Gimme5 GGL", "color" : "black", "img" : "https://images.vestiairecollective.com/images/resized/w=190,q=75,f=auto,/produit/navy-polyester-george-gina-lucy-handbag-35719559-1_4.jpg", "rating" : "10"},
+        {"name" : "El Mago GGL", "color" : "orange and blue", "img" : "https://a.allegroimg.com/s512/115e24/e494f684415da43b1a9bfd08b8a4/GEORGE-GINA-LUCY-swietna-TOREBKA-unikatowa", "rating" : "6"},
+        {"name" : "Fake GGL", "color" : "black and white", "img" : "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQm5j981EODt-XlXpXfEcCkNvaavx4oHRRxGUcnoGw5H9sR9EJKJYFJEJBSTxRAYKWvRMNnGnjioiiuKgWgsGbYW3YPpp1QjaGn7RYdOXC2MP480riSAUF-GMVW-lGGS77mwsIi71-aEA&usqp=CAc", "rating" : "10"},
+        {"name" : "Vintage GGL", "color" : "beige", "img" : "https://images.vestiairecollective.com/images/resized/q=75,f=auto,/produit/39543225-1_4.jpg", "rating" : "8"}
+    ]
+}
