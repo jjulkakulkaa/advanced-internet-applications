@@ -11,10 +11,10 @@
     <ul>
         <% cart.forEach(item => { %>
             <li>
-                <% if (item.product) { %>
-                    <span><%= item.product.name %> - $<%= item.product.price %></span>
+                <% if (item) { %>
+                    <span><%= item.name %> - $<%= item.price %></span>
                     <form action="/cart/remove" method="POST">
-                        <input type="hidden" name="productId" value="<%= item.product._id %>">
+                        <input type="hidden" name="productId" value="<%= item.productId %>">
                         <button type="submit">Remove from Cart</button>
                     </form>
                 <% } else { %>

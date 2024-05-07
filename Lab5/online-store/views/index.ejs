@@ -11,10 +11,17 @@
     <ul>
         <% products.forEach(product => { %>
             <li>
+                <!-- Display product name and price -->
                 <span><%= product.name %> - $<%= product.price %></span>
-                <!-- Add an onclick event to log the productId -->
-                <form action="/cart" method="POST" onsubmit="logProductId('<%= product._id %>')">
+                <!-- Display available amount -->
+                <span>Available: <%= product.amount %></span>
+                <!-- Form to add items to cart with quantity input -->
+                <form action="/cart" method="POST">
+                    <!-- Hidden input for productId -->
                     <input type="hidden" name="productId" value="<%= product._id %>">
+                    <!-- Input field for quantity with maximum set to available amount -->
+                    <input type="number" name="quantity" value="1" min="1" max="<%= product.amount %>">
+                    <!-- Submit button to add item to cart -->
                     <button type="submit">Add to Cart</button>
                 </form>
             </li>
