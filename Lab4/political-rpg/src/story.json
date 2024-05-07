@@ -1,0 +1,157 @@
+{
+    "scenes": [
+      {
+        "id": 1,
+        "text": "Obudziłxś się w szpitalu w Gdańsku. Nic nie pamiętasz. Podchodzi do ciebie pielęgniarz, pytasz go: - Który mamy rok? - Jest 1989. Byłxś w śpiączce przez 5 lat, w telewizorze wiszącym na ścianie nieopodal łóżka widzisz przemawiającego Lecha Wałęsę. Usłyszałxś o upadku komunizmu",
+        "options": [
+          {
+            "text": "Pogoń za pieniędzni doprowadzi ten naród do katastrofy",
+            "sceneId": 2
+          },
+          {
+            "text": "Super w końcu założę buiznes",
+            "sceneId": 3
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "text": "Minęło pare lat w trakcie których nie potrafiłxś przyzwyczaić się do życia w niekomunistycznej Polsce. Wydaje ci się że ludzie nie są tak życzliwi jak kiedyś, poza tym wciąż starasz się znaleźć pracę ale nic się nie udaje. Zaczynasz interesować się polityką",
+        "options": [
+          {
+            "text": "Urban areas",
+            "sceneId": 4
+          },
+          {
+            "text": "Rural areas",
+            "sceneId": 5
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "text": "You join the confederation and start building support. Do you prioritize economic reforms or social issues?",
+        "options": [
+          {
+            "text": "Economic reforms",
+            "sceneId": 6
+          },
+          {
+            "text": "Social issues",
+            "sceneId": 7
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "text": "Your focus on urban areas gains support among the youth and intellectuals. You gain momentum in the campaign.",
+        "options": [
+          {
+            "text": "Continue campaigning",
+            "sceneId": 8
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "text": "Your efforts in rural areas win over farmers and traditional voters. Your popularity grows.",
+        "options": [
+          {
+            "text": "Continue campaigning",
+            "sceneId": 8
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "text": "Your emphasis on economic reforms attracts business leaders and investors. You gain financial support for your cause.",
+        "options": [
+          {
+            "text": "Continue building support",
+            "sceneId": 8
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "text": "Your focus on social issues resonates with marginalized groups and activists. You gain grassroots support.",
+        "options": [
+          {
+            "text": "Continue building support",
+            "sceneId": 8
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "text": "The election day arrives. Do you have any last-minute strategies?",
+        "options": [
+          {
+            "text": "Launch a social media campaign",
+            "sceneId": 9
+          },
+          {
+            "text": "Hold rallies in key districts",
+            "sceneId": 10
+          },
+          {
+            "text": "Focus on ground game and door-to-door canvassing",
+            "sceneId": 11
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "text": "Your social media campaign goes viral, mobilizing young voters. You win significant support.",
+        "options": [
+          {
+            "text": "Proceed to election results",
+            "sceneId": 12
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "text": "Your rallies energize your base and attract undecided voters. You gain momentum going into the election.",
+        "options": [
+          {
+            "text": "Proceed to election results",
+            "sceneId": 12
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "text": "Your ground game proves effective in getting out the vote. You secure strong turnout in key areas.",
+        "options": [
+          {
+            "text": "Proceed to election results",
+            "sceneId": 12
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "text": "The election results are in. Did you win?",
+        "options": [
+          {
+            "text": "Yes, I won!",
+            "sceneId": 13
+          },
+          {
+            "text": "No, I lost...",
+            "sceneId": 14
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "text": "Congratulations! You've won the election and become a member of the parliament. Your political journey continues..."
+      },
+      {
+        "id": 14,
+        "text": "Better luck next time. Your political journey may have ended for now, but there are always new opportunities..."
+      }
+    ]
+  }
+  

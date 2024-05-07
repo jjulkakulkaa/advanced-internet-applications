@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Store</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Welcome to my Online Store</h1>
+    <ul>
+        <% products.forEach(product => { %>
+            <li>
+                <span><%= product.name %> - $<%= product.price %></span>
+                <!-- Add an onclick event to log the productId -->
+                <form action="/cart" method="POST" onsubmit="logProductId('<%= product._id %>')">
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                    <button type="submit">Add to Cart</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+    <!-- Button to navigate to the shopping cart -->
+    <a href="/cart">
+        <button>View Shopping Cart</button>
+    </a>
+
+    <!-- JavaScript function to log the productId -->
+    <script>
+        function logProductId(productId) {
+            console.log('Product ID:', productId);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Shopping Cart</h1>
+    <ul>
+        <% cart.forEach(item => { %>
+            <li>
+                <% if (item.product) { %>
+                    <span><%= item.product.name %> - $<%= item.product.price %></span>
+                    <form action="/cart/remove" method="POST">
+                        <input type="hidden" name="productId" value="<%= item.product._id %>">
+                        <button type="submit">Remove from Cart</button>
+                    </form>
+                <% } else { %>
+                    <span>Product not found</span>
+                <% } %>
+            </li>
+        <% }) %>
+    </ul>
+    <a href="/">Continue Shopping</a>
+    <form action="/checkout" method="POST">
+        <button type="submit">Checkout</button>
+    </form>
+</body>
+</html>
