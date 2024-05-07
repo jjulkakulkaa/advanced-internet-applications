@@ -61,25 +61,20 @@ app.post('/cart', async (req, res) => {
             quantity: requestedQuantity
         };
 
-        // Get the user's cart from the session or create an empty cart if it doesn't exist
         let userCart = req.session.cart || {};
 
-        // Get the cart for the current user based on their session ID
         const sessionId = req.sessionID;
         let currentUserCart = userCart[sessionId];
 
         console.log('Session ID:', sessionId);
 
-        // If the current user doesn't have a cart yet, create one
         if (!currentUserCart) {
             currentUserCart = [];
             userCart[sessionId] = currentUserCart;
         }
 
-        // Add the cart item to the user's cart
         currentUserCart.push(cartItem);
 
-        // Update the cart in the session
         req.session.cart = userCart;
 
         console.log('Product added to cart:', cartItem);
@@ -127,20 +122,19 @@ app.post('/cart/remove', (req, res) => {
     }
 });
 
-
-
 // CHECKOUT
 app.post('/checkout', async (req, res) => {
     try {
-        // Get the user's cart from the session
-        const cart = req.session.cart || [];
-
+        const sessionId = req.sessionID;
+        const cart = req.session.cart || {};
         console.log('Cart:', cart);
-        
+
+        // Extracting the array of cart items for the current session
+        const cartItems = cart[sessionId] || [];
+
         // Check if any item's requested quantity exceeds available stock
         const insufficientItems = [];
-        for (const item of cart) {
-
+        for (const item of cartItems) {
             const product = await Product.findById(item.productId);
 
             console.log('In store:', product.amount, 'Requested:', item.quantity);
@@ -154,11 +148,10 @@ app.post('/checkout', async (req, res) => {
         if (insufficientItems.length > 0) {
             console.log('Insufficient items in cart:', insufficientItems);
             return res.status(400).send('One or more items in your cart are no longer available or have insufficient stock.');
-            
         }
 
         // If all items are valid, update the shop's available stock and remove items from the user's cart
-        for (const item of cart) {
+        for (const item of cartItems) {
             const product = await Product.findById(item.productId);
             if (product) {
                 product.amount -= item.quantity;
@@ -167,7 +160,8 @@ app.post('/checkout', async (req, res) => {
         }
 
         // Remove items from the user's cart
-        req.session.cart = [];
+        delete cart[sessionId]; // Remove the user's cart items from the session
+        req.session.cart = cart; // Update the session with the modified cart
 
         res.redirect('/'); // Redirect to the main page after successful checkout
     } catch (error) {
