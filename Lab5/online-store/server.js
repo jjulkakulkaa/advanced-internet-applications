@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const Product = require('./models/Product');
 
 
-
 const app = express();
 const port = 3000;
 
@@ -13,6 +12,8 @@ mongoose.connect('mongodb://localhost:27017/online-store', { useNewUrlParser: tr
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// do klucza sesji
 app.use(session({ 
     store: new session.MemoryStore(),
     secret: 'secret-key', 
@@ -20,26 +21,31 @@ app.use(session({
     saveUninitialized: true 
 }));
 
+
+// po uruchomieniu pobiera z bazy
+// Fetch products from the database
 app.get('/', async (req, res) => {
-    const products = await Product.find();
-    res.render('index.ejs', { products });
+    try {
+        const products = await Product.find();
+        res.render('index.ejs', { products });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send('Error fetching products: ' + error.message);
+    }
 });
-
-
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
+// CART
 
-
-// CART ITEMS ADDITION
 app.post('/cart', async (req, res) => {
     const productId = req.body.productId;
-    const requestedQuantity = req.body.quantity || 1; // Default to 1 if quantity is not provided
+    const requestedQuantity = parseInt(req.body.quantity) || 1;
 
     try {
-        // Retrieve product information from the database
+        // znajdz produkt w db
         const product = await Product.findById(productId);
 
         if (!product) {
@@ -47,22 +53,14 @@ app.post('/cart', async (req, res) => {
             return res.status(404).send('Product not found');
         }
 
-        // Check if requested quantity is available in the shop
+        // sprawdanie czy jest tyle ile chce user
         if (requestedQuantity > product.amount) {
             console.log('Requested quantity exceeds available stock');
             return res.status(400).send('Requested quantity exceeds available stock');
         }
 
-        // Create cart item object
-        const cartItem = {
-            productId: product._id,
-            name: product.name,
-            price: product.price,
-            quantity: requestedQuantity
-        };
-
+        // pobieranie cart przypisanego do id sesji
         let userCart = req.session.cart || {};
-
         const sessionId = req.sessionID;
         let currentUserCart = userCart[sessionId];
 
@@ -73,7 +71,37 @@ app.post('/cart', async (req, res) => {
             userCart[sessionId] = currentUserCart;
         }
 
-        currentUserCart.push(cartItem);
+        // dodawanie w koszyku
+        const totalQuantityInCart = currentUserCart.reduce((total, item) => {
+            if (item.productId === productId) {
+                return total + item.quantity;
+            }
+            return total;
+        }, 0);
+
+        // sprawdzanie czy to w koszyku nie przekracza dostepnego
+        if (totalQuantityInCart + requestedQuantity > product.amount) {
+            console.log('Adding requested quantity exceeds available stock');
+            return res.status(400).send('Adding requested quantity exceeds available stock');
+        }
+
+        // tworzenie obiektu w koszyku
+        const cartItem = {
+            productId: product._id,
+            name: product.name,
+            price: product.price,
+            quantity: requestedQuantity
+        };
+
+        
+        const existingCartItemIndex = currentUserCart.findIndex(item => item.productId === productId);
+
+        if (existingCartItemIndex !== -1) {
+            currentUserCart[existingCartItemIndex].quantity += requestedQuantity;
+        } else {
+            currentUserCart.push(cartItem);
+        }
+
 
         req.session.cart = userCart;
 
@@ -85,32 +113,22 @@ app.post('/cart', async (req, res) => {
     }
 });
 
-app.get('/cart', (req, res) => {
-    // Ensure req.session.cart is initialized as an empty array if it doesn't exist
-    const sessionId = req.sessionID;
-    const userCart = req.session.cart || {};
-    const currentUserCart = userCart[sessionId] || [];
-    // Log the cart object for debugging
-    console.log('Cart:', currentUserCart);
-    res.render('cart.ejs', { cart: currentUserCart });
-});
-
 
 app.post('/cart/remove', (req, res) => {
     const productId = req.body.productId;
     console.log('Product ID to remove:', productId);
     try {
-        // Get the user's cart from the session
+        // pobranie koszyka
         const sessionId = req.sessionID;
         let userCart = req.session.cart || {};
         let currentUserCart = userCart[sessionId] || [];
 
         console.log('Cart before removal:', currentUserCart);
 
-        // Filter out the selected product from the user's cart
+        // odfiltrowanie
         currentUserCart = currentUserCart.filter(item => item.productId !== productId);
 
-        // Update the user's cart in the session
+        //update koszyka
         userCart[sessionId] = currentUserCart;
         req.session.cart = userCart;
 
@@ -122,35 +140,59 @@ app.post('/cart/remove', (req, res) => {
     }
 });
 
+
+app.get('/cart', async (req, res) => {
+    try {
+        const sessionId = req.sessionID;
+        const userCart = req.session.cart || {};
+        const currentUserCart = userCart[sessionId] || [];
+
+        // Populate the photo field for each item in the cart
+        for (const item of currentUserCart) {
+            const product = await Product.findById(item.productId);
+            if (product) {
+                item.photo = product.photo;
+            }
+        }
+
+        console.log('Cart:', currentUserCart);
+        res.render('cart.ejs', { cart: currentUserCart });
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).send('Error fetching cart: ' + error.message);
+    }
+});
+
+
+
 // CHECKOUT
-app.post('/checkout', async (req, res) => {
+app.post('/cart/checkout', async (req, res) => {
     try {
         const sessionId = req.sessionID;
         const cart = req.session.cart || {};
         console.log('Cart:', cart);
 
-        // Extracting the array of cart items for the current session
         const cartItems = cart[sessionId] || [];
 
-        // Check if any item's requested quantity exceeds available stock
+        // Czy licznosc jakis itemow sie nie zmienila
         const insufficientItems = [];
         for (const item of cartItems) {
             const product = await Product.findById(item.productId);
 
-            console.log('In store:', product.amount, 'Requested:', item.quantity);
+            console.log('in store :', product.amount, 'user request:', item.quantity);
 
             if (!product || item.quantity > product.amount) {
                 insufficientItems.push(item);
             }
         }
 
-        // If any items are insufficient, inform the user and don't proceed with checkout
+        // anuluj checkout
         if (insufficientItems.length > 0) {
             console.log('Insufficient items in cart:', insufficientItems);
             return res.status(400).send('One or more items in your cart are no longer available or have insufficient stock.');
         }
 
-        // If all items are valid, update the shop's available stock and remove items from the user's cart
+        // jest ok zmieniamy baze
         for (const item of cartItems) {
             const product = await Product.findById(item.productId);
             if (product) {
@@ -159,11 +201,11 @@ app.post('/checkout', async (req, res) => {
             }
         }
 
-        // Remove items from the user's cart
-        delete cart[sessionId]; // Remove the user's cart items from the session
-        req.session.cart = cart; // Update the session with the modified cart
+        delete cart[sessionId]; 
+        // usun koszyk
+        req.session.cart = cart; 
 
-        res.redirect('/'); // Redirect to the main page after successful checkout
+        res.redirect('/'); 
     } catch (error) {
         console.error('Error checking out:', error);
         res.status(500).send('Error checking out: ' + error.message);
