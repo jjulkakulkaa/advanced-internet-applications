@@ -11,12 +11,12 @@
     <ul>
         <% products.forEach(product => { %>
             <li>
-                <div class="cart-item"> 
+                <div class="shop-item"> 
                     <img src="<%= product.photo %>" alt="<%= product.name %>">
-                    <div class="item-details"> <!-- Added class "item-details" -->
+                    <div class="item-details"> 
                         <h2><%= product.name %></h2>
                         <p class="price">$<%= product.price %></p>
-                        <p class="quantity">Available: <%= product.amount %></p> <!-- Changed "quantity" to "Available" -->
+                        <p class="quantity">Available: <%= product.amount %></p> 
                         <form action="/cart" method="POST">
                             <input type="hidden" name="productId" value="<%= product._id %>">
                             <input type="number" name="quantity" value="1" min="1" max="<%= product.amount %>">
@@ -40,5 +40,6 @@
             console.log('Product ID:', productId);
         }
     </script>
+    
 </body>
 </html>

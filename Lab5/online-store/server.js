@@ -23,7 +23,6 @@ app.use(session({
 
 
 // po uruchomieniu pobiera z bazy
-// Fetch products from the database
 app.get('/', async (req, res) => {
     try {
         const products = await Product.find();
@@ -39,12 +38,12 @@ app.listen(port, () => {
 });
 
 // CART
-
 app.post('/cart', async (req, res) => {
     const productId = req.body.productId;
     const requestedQuantity = parseInt(req.body.quantity) || 1;
 
     try {
+       
         // znajdz produkt w db
         const product = await Product.findById(productId);
 
@@ -101,11 +100,10 @@ app.post('/cart', async (req, res) => {
         } else {
             currentUserCart.push(cartItem);
         }
-
-
         req.session.cart = userCart;
 
-        console.log('Product added to cart:', cartItem);
+
+        // console.log('Product added to cart:', cartItem);
         res.redirect('/');
     } catch (error) {
         console.error('Error adding product to cart:', error);
@@ -116,14 +114,14 @@ app.post('/cart', async (req, res) => {
 
 app.post('/cart/remove', (req, res) => {
     const productId = req.body.productId;
-    console.log('Product ID to remove:', productId);
+    // console.log('Product ID to remove:', productId);
     try {
         // pobranie koszyka
         const sessionId = req.sessionID;
         let userCart = req.session.cart || {};
         let currentUserCart = userCart[sessionId] || [];
 
-        console.log('Cart before removal:', currentUserCart);
+        //console.log('Cart before removal:', currentUserCart);
 
         // odfiltrowanie
         currentUserCart = currentUserCart.filter(item => item.productId !== productId);
@@ -132,7 +130,7 @@ app.post('/cart/remove', (req, res) => {
         userCart[sessionId] = currentUserCart;
         req.session.cart = userCart;
 
-        console.log('Cart after removal:', currentUserCart);
+        //console.log('Cart after removal:', currentUserCart);
         res.redirect('/cart');
     } catch (error) {
         console.error('Error removing product from cart:', error);
@@ -147,7 +145,7 @@ app.get('/cart', async (req, res) => {
         const userCart = req.session.cart || {};
         const currentUserCart = userCart[sessionId] || [];
 
-        // Populate the photo field for each item in the cart
+        // dodanie zdjecia dla kazdego w  koszyku
         for (const item of currentUserCart) {
             const product = await Product.findById(item.productId);
             if (product) {
@@ -155,7 +153,7 @@ app.get('/cart', async (req, res) => {
             }
         }
 
-        console.log('Cart:', currentUserCart);
+        //console.log('Cart:', currentUserCart);
         res.render('cart.ejs', { cart: currentUserCart });
     } catch (error) {
         console.error('Error fetching cart:', error);
@@ -170,7 +168,7 @@ app.post('/cart/checkout', async (req, res) => {
     try {
         const sessionId = req.sessionID;
         const cart = req.session.cart || {};
-        console.log('Cart:', cart);
+        //console.log('Cart:', cart);
 
         const cartItems = cart[sessionId] || [];
 
@@ -188,8 +186,8 @@ app.post('/cart/checkout', async (req, res) => {
 
         // anuluj checkout
         if (insufficientItems.length > 0) {
-            console.log('Insufficient items in cart:', insufficientItems);
-            return res.status(400).send('One or more items in your cart are no longer available or have insufficient stock.');
+            console.log('items in cart dont match:', insufficientItems);
+            return res.status(400).send('One or more items in your cart are no longer available or you want to buy more than in stock.');
         }
 
         // jest ok zmieniamy baze
