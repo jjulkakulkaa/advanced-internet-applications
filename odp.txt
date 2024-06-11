@@ -1,0 +1,19 @@
+1. Controllers - actions with data, post, get ect, model-view connector
+	Views - UI
+	Models - specifies objects, data from database
+2. Naming
+    Models liczba poj - Movie
+    Controllers - ends with Controller
+    Views - named after controller without controller
+3. Passing data:
+    xxx["Mess"] = fdsfd
+    xxx.Mess = fdsfd
+4. using app.MapControllerRoute by providing pattern: pattern: "{controller=Home}/{action=Index}/{id?}"); - (in Program.cs)
+5. ex. using atribute [HttpPost] before function to ensure using POST request ( [HttpGet] is used bu default when getting smth) (when filtering data there is no HttpPost because nothing changes in data its just filter)
+6. ValidateAntiForgeryToken - prevents forgery of a request
+7. Controllers and views takes validation rules automatically from model  
+In controllers - ModelState.IsValid - if data is valid then its saved
+	In models - by attributes ex.
+    [RegularExpression(@"^[A-Z]+[a-zA-Z0-9""'\s-]*$")]
+    [StringLength(5)]
+    [Required]
